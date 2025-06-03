@@ -1,18 +1,19 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
-import mysql.connector
+import psycopg2
 from datetime import datetime
 import os
 
 app = FastAPI()
 
-# MySQL connection configuration
+# PostgreSQL connection configuration
 db_config = {
-    'host': os.getenv('MYSQL_HOST', 'mysql'),
-    'user': os.getenv('MYSQL_USER', 'root'),
-    'password': os.getenv('MYSQL_PASSWORD', 'root'),
-    'database': os.getenv('MYSQL_DATABASE', 'microservicios')
+    'host': os.getenv('dpg-d0vluvfdiees73f0gmsg-a'),
+    'user': os.getenv('microservicesdb_nrzf_user'),
+    'password': os.getenv('MhGw7Xq8cFF3CoKTYPnxoO6i5NVoiUzL'),
+    'database': os.getenv('microservicesdb_nrzf'),
+    'port': os.getenv('POSTGRES_PORT', '5432')
 }
 
 # Service URLs
@@ -21,7 +22,7 @@ RESTA_URL = os.getenv('RESTA_URL', 'https://resta-service.onrender.com/restar')
 
 # Create database connection
 def get_db_connection():
-    return mysql.connector.connect(**db_config)
+    return psycopg2.connect(**db_config)
 
 # Create table if not exists
 def init_db():
@@ -29,7 +30,7 @@ def init_db():
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS resultados (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             a FLOAT,
             b FLOAT,
             c FLOAT,
@@ -67,7 +68,7 @@ def resolver(valores: Input):
 
     resultado = suma * resta
 
-    # Store result in MySQL
+    # Store result in PostgreSQL
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
