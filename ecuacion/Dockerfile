@@ -1,17 +1,19 @@
-FROM python:3.12-slim AS base
+FROM python:3.12-slim
 
-# Install system dependencies required for psycopg2
+WORKDIR /microservicios
+
+# Instala dependencias del sistema para psycopg2
 RUN apt-get update && apt-get install -y \
     gcc \
-    python3-dev \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /microservicios
+# Instala dependencias de Python
 COPY requirements.txt .
-# Upgrade pip and setuptools before installing requirements
-RUN pip install --upgrade pip setuptools && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Copia tu código
 COPY multiplica.py .
 
+# Comando para correr la app
 CMD ["uvicorn", "multiplica:app", "--host", "0.0.0.0", "--port", "8000"]
