@@ -3,16 +3,21 @@ from pydantic import BaseModel
 import requests
 import mysql.connector
 from datetime import datetime
+import os
 
 app = FastAPI()
 
 # MySQL connection configuration
 db_config = {
-    'host': 'mysql',
-    'user': 'root',
-    'password': 'root',
-    'database': 'microservicios'
+    'host': os.getenv('MYSQL_HOST', 'mysql'),
+    'user': os.getenv('MYSQL_USER', 'root'),
+    'password': os.getenv('MYSQL_PASSWORD', 'root'),
+    'database': os.getenv('MYSQL_DATABASE', 'microservicios')
 }
+
+# Service URLs
+SUMA_URL = os.getenv('SUMA_URL', 'https://suma-service-z2qf.onrender.com/sumar')
+RESTA_URL = os.getenv('RESTA_URL', 'https://resta-service.onrender.com/restar')
 
 # Create database connection
 def get_db_connection():
@@ -52,8 +57,10 @@ class Input(BaseModel):
 
 @app.post("/resolver")
 def resolver(valores: Input):
-    suma_resp = requests.post("http://suma:8000/sumar", json={"a": valores.a, "b": valores.b})
-    resta_resp = requests.post("http://resta:8000/restar", json={"c": valores.c, "d": valores.d})
+    # Call suma service
+    suma_resp = requests.post(SUMA_URL, json={"a": valores.a, "b": valores.b})
+    # Call resta service
+    resta_resp = requests.post(RESTA_URL, json={"c": valores.c, "d": valores.d})
 
     suma = suma_resp.json()["resultado"]
     resta = resta_resp.json()["resultado"]
