@@ -9,10 +9,10 @@ app = FastAPI()
 
 # PostgreSQL connection configuration
 db_config = {
-    'host': os.getenv('dpg-d0vluvfdiees73f0gmsg-a'),
-    'user': os.getenv('microservicesdb_nrzf_user'),
-    'password': os.getenv('MhGw7Xq8cFF3CoKTYPnxoO6i5NVoiUzL'),
-    'database': os.getenv('microservicesdb_nrzf'),
+    'host': os.getenv('POSTGRES_HOST', 'dpg-d0vluvfdiees73f0gmsg-a'),
+    'user': os.getenv('POSTGRES_USER', 'microservicesdb_nrzf_user'),
+    'password': os.getenv('POSTGRES_PASSWORD', 'MhGw7Xq8cFF3CoKTYPnxoO6i5NVoiUzL'),
+    'database': os.getenv('POSTGRES_DATABASE', 'microservicesdb_nrzf'),
     'port': os.getenv('POSTGRES_PORT', '5432')
 }
 
