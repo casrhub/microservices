@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resta
+  namespace: microservicios
+spec:
+  selector:
+    matchLabels:
+      app: resta
+  template:
+    metadata:
+      labels:
+        app: resta
+    spec:
+      containers:
+      - name: resta
+        image: resta:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: resta
+  namespace: microservicios
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    app: resta
